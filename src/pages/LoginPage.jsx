@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import InputText from "../components/Input";
 import { useAuth } from "../context/AuthContext";
 import Alert from "../components/Alert";
-import { useNavigate } from "react-router-dom";
+import { BarLoader, BounceLoader, CircleLoader, ClipLoader, DotLoader, HashLoader, MoonLoader, PacmanLoader, PuffLoader, RingLoader, RiseLoader, SyncLoader } from "react-spinners";
 
 function LoginPage() {
   const { login } = useAuth();
@@ -11,6 +11,13 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [color, setColor] = useState("#0097D1");
+  const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "red",
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -38,18 +45,24 @@ function LoginPage() {
     if (!isNotEmpty) return;
 
     try {
-      await login(form.email, form.password);
-      window.location.href = "/dashboard"
+      setLoading(true);
+      const success = await login(form.email, form.password);
+      window.location.href = "/dashboard";
     } catch (err) {
-      setError(err.response.data.message)
+      setError(err.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="max-w-screen h-screen flex">
+      {/* left side */}
       <div className="w-1/2 h-full">
         <img src="./src/assets/img-tb.jpg" alt="" className="h-full" />
       </div>
+
+      {/* rigth side */}
       <div className="w-1/2 h-full bg-linear-to-t from-sky-500 to-indigo-500 flex flex-col p-5 text-white font-poppins font-medium text-xl">
         <h3>Hello!</h3>
         <h3>Welcome to SmartSPP</h3>
@@ -66,7 +79,7 @@ function LoginPage() {
               <p className="text-sm">Email</p>
               <InputText
                 name="email"
-                placeholder="Email"
+                placeholder="Enter your email..."
                 onChange={handleChange}
                 value={form.email}
               />
@@ -78,7 +91,7 @@ function LoginPage() {
               <p className="text-sm">Password</p>
               <InputText
                 name="password"
-                placeholder="Password"
+                placeholder="Enter your password..."
                 type="password"
                 onChange={handleChange}
                 value={form.password}
@@ -87,11 +100,24 @@ function LoginPage() {
                 <p className="text-sm text-red-400 mt-2">{passwordError}</p>
               )}
             </div>
-            <a href="" className="text-end text-xs ">
+            <a href="/forgot-password" className="text-end text-xs ">
               Forgot password?
             </a>
             <div className="m-auto flex flex-col gap-5">
-              <Button type="submit">Login</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <PuffLoader
+                    color={color}
+                    loading={loading}
+                    cssOverride={override}
+                    size={25}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                ) : (
+                  "Login"
+                )}
+              </Button>
               <a href="" className="text-sm text-center">
                 Don’t have an account?
               </a>

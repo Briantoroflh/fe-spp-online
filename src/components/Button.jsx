@@ -7,11 +7,13 @@ const ColorButton = {
     "bg-gray-100 text-gray-800 shadow-md font-poppins font-semibold hover:bg-neutral-200",
 };
 
-const Button = ({ children, color, onClick, type }) => {
+const Button = ( props ) => {
+  const { onClick, type, disabled, children, color } = props;
   return (
     <button
       onClick={onClick}
       type={type}
+      disabled={disabled}
       className={`p-2 ${ColorButton[color || "PRIMARY"]} w-100 rounded-md`}
     >
       <div className="text-sky-500">{children}</div>

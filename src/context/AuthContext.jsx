@@ -1,5 +1,5 @@
-import { createContext, useContext, useState } from "react";
-import { Login } from "../services/AuthServices";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Login, Profile } from "../services/AuthServices";
 import { setToken } from "../utils/Cookies";
 
 const AuthContext = createContext();
@@ -9,12 +9,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const data = await Login(email, password);
-    console.log(data);
-    
     setToken(data.access_token);
-    setUser(data.data);
-
   };
+
+  useEffect(() => {
+    Profile()
+      .then((res) => setUser(res.data))
+      .catch(() => setUser(null));
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login }}>

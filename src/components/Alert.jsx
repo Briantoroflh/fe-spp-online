@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
 
-const Alert = ({children}) => {
+const Alert = (props) => {
+  const { children } = props;
   return (
-    <div className='bg-red-400 text-sm p-2 mb-3 rounded-md flex gap-2 items-center shadow-md'>
-        {children}
+    <div className="bg-red-400 text-sm p-2 mb-3 rounded-md flex gap-2 items-center shadow-md">
+      {children}
     </div>
-  )
-}
+  );
+};
 
-export default Alert
+export default Alert;

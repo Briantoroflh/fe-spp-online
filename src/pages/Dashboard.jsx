@@ -1,11 +1,11 @@
-import React from 'react'
+import React from "react";
+import { CardSection } from "../components/Card";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 function Dashboard() {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <DashboardLayout>
+    
+  </DashboardLayout>;
 }
 
-export default Dashboard
+export default Dashboard;
