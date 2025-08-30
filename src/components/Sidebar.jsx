@@ -1,11 +1,11 @@
 export const Sidebar = (props) => {
   const { children } = props;
-  return <div className="min-w-70 min-h-screen bg-white">{children}</div>;
+  return <div className="min-w-65 min-h-screen bg-white">{children}</div>;
 };
 
 export const SidebarHeader = (props) => {
   const { children } = props;
-  return <div className="shadow-md min-h-18 p-2">{children}</div>;
+  return <div className="min-h-18 p-2 flex items-center">{children}</div>;
 };
 
 export const SidebarFooter = (props) => {

@@ -1,19 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarItem,
 } from "../components/Sidebar";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { useAuth } from "../context/AuthContext";
 
-function DashboardLayout(props) {
-  const { children } = props;
+function DashboardLayout({ children }) {
   const { user } = useAuth();
-  const username = user?.name;
+  const username = user?.username;
   const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const Menu = [
     {
       icon: <i className="ri-dashboard-3-fill"></i>,
@@ -22,66 +23,106 @@ function DashboardLayout(props) {
     },
     {
       icon: <i className="ri-bill-fill"></i>,
-      name: "Bill",
+      name: "Tagihan",
       url: "/bill-student",
     },
-    {
-      icon: <i className="ri-user-fill"></i>,
-      name: "Users",
-      url: "/bill-student",
-    },
+    { icon: <i className="ri-user-fill"></i>, name: "Murid", url: "/student" },
     {
       icon: <i className="ri-user-2-fill"></i>,
-      name: "Students",
-      url: "/bill-student",
+      name: "Petugas",
+      url: "/officer",
     },
   ];
+
   return (
-    <div className="flex min-w-screen bg-neutral-200">
-      <Sidebar>
-        <SidebarHeader>
-          <img
-            src="./src/assets/logo-smartspp-v2.svg"
-            alt=""
-            className="w-35 mt-2"
-          />
-        </SidebarHeader>
-        <SidebarContent>
-          {Menu.map((items, index) => {
-            const isActive = location.pathname === items.url;
-            return (
-              <div className="mt-4">
+    <div className="bg-neutral-100 min-h-screen">
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-40 bg-white shadow-lg w-64 
+        transform transition-transform duration-300 ease-in-out 
+        ${sidebarOpen ? "translate-x-0" : "-translate-x-64"} 
+        md:translate-x-0`}
+      >
+        <Sidebar>
+          <SidebarHeader>
+            <img
+              src="./src/assets/logo-smartspp-v2.svg"
+              alt="logo"
+              className="w-32 mx-auto"
+            />
+          </SidebarHeader>
+          <SidebarContent>
+            {Menu.map((items, index) => {
+              const isActive = location.pathname === items.url;
+              return (
                 <SidebarItem
                   key={index}
-                  href={items.url}
-                  className={isActive ? "bg-blue-500 text-white" : ""}
+                  className={`flex items-center gap-2 p-2 rounded-md mt-2 
+                  ${
+                    isActive
+                      ? "bg-blue-500 text-white"
+                      : "hover:bg-blue-500 hover:text-white"
+                  }`}
                 >
-                  {items.icon}
-                  {items.name}
+                  <Link
+                    to={items.url}
+                    className="flex items-center gap-2 w-full"
+                  >
+                    {items.icon}
+                    {items.name}
+                  </Link>
                 </SidebarItem>
+              );
+            })}
+          </SidebarContent>
+        </Sidebar>
+      </div>
+
+      {/* Overlay (mobile) */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-30 md:ml-64">
+        <Navbar>
+          {/* Tombol toggle sidebar (mobile) */}
+          <button
+            className="md:hidden mr-3 text-neutral-600"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <i className="ri-menu-line text-2xl"></i>
+          </button>
+
+          <div className="flex justify-between w-full items-center">
+            <div>
+              <h1 className="font-poppins font-bold text-xl text-blue-500">
+                Dashboard
+              </h1>
+              <p className="font-poppins text-sm text-neutral-500">Dashboard</p>
+            </div>
+            <div className="flex gap-5 items-center">
+              <div className="flex flex-col font-poppins">
+                <p className="text-xs font-semibold text-neutral-500">
+                  Welcome
+                </p>
+                <h3 className="font-bold text-lg text-neutral-500">
+                  {username}
+                </h3>
               </div>
-            );
-          })}
-        </SidebarContent>
-      </Sidebar>
-      <Navbar>
-        <div>
-          <h1 className="font-poppins font-bold text-xl text-blue-500">
-            Dashboard
-          </h1>
-          <p className="font-poppins text-sm text-neutral-500">Dashboard</p>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex flex-col font-poppins">
-            <p className="text-xs font-semibold text-neutral-500">Welcome</p>
-            <h3 className="font-bold text-lg text-neutral-500">{username}</h3>
+              <div className="rounded-full flex items-center justify-center w-10 h-10 text-neutral-500 border">
+                <i className="ri-user-5-fill ri-lg"></i>
+              </div>
+            </div>
           </div>
-          <div className="outline-2 rounded-full flex items-center justify-center w-10 h-10 text-neutral-500">
-            <i className="ri-user-5-fill ri-lg"></i>
-          </div>
-        </div>
-      </Navbar>
-      <div className="">{children}</div>
+        </Navbar>
+      </div>
+
+      {/* Main Content */}
+      <main className="pt-20 md:ml-64 p-4">{children}</main>
     </div>
   );
 }

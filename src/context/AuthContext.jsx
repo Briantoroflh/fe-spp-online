@@ -7,9 +7,10 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async (email, password) => {
-    const data = await Login(email, password);
+  const login = async (username, password) => {
+    const data = await Login(username, password);
     setToken(data.access_token);
+    console.log(data.access_token);
   };
 
   useEffect(() => {

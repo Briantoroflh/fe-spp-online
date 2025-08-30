@@ -7,9 +7,9 @@ import { BarLoader, BounceLoader, CircleLoader, ClipLoader, DotLoader, HashLoade
 
 function LoginPage() {
   const { login } = useAuth();
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
   const [color, setColor] = useState("#0097D1");
@@ -28,11 +28,11 @@ function LoginPage() {
 
     let isNotEmpty = true;
 
-    if (!form.email.trim()) {
-      setEmailError("Email cannot be empty!");
+    if (!form.username.trim()) {
+      setUsernameError("Username cannot be empty!");
       isNotEmpty = false;
     } else {
-      setEmailError("");
+      setUsernameError("");
     }
 
     if (!form.password.trim()) {
@@ -46,7 +46,7 @@ function LoginPage() {
 
     try {
       setLoading(true);
-      const success = await login(form.email, form.password);
+      await login(form.username, form.password);
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err.response.data.message);
@@ -76,15 +76,15 @@ function LoginPage() {
           )}
           <div className="flex flex-col gap-12">
             <div>
-              <p className="text-sm">Email</p>
+              <p className="text-sm">Username</p>
               <InputText
-                name="email"
-                placeholder="Enter your email..."
+                name="username"
+                placeholder="Enter your username..."
                 onChange={handleChange}
-                value={form.email}
+                value={form.username}
               />
-              {emailError && (
-                <p className="text-sm text-red-400 mt-2">{emailError}</p>
+              {usernameError && (
+                <p className="text-sm text-red-400 mt-2">{usernameError}</p>
               )}
             </div>
             <div>
@@ -128,11 +128,13 @@ function LoginPage() {
           <p>If you have trouble please contact</p>
           <p>zetoonikcompany@gmail.com</p>
         </div>
-        <img
-          src="./src/assets/logo-smartspp.svg"
-          alt=""
-          className="w-20 h-10 ms-150"
-        />
+        <div className="flex justify-end">
+          <img
+            src="./src/assets/logo-smartspp.svg"
+            alt=""
+            className="w-20 h-10"
+          />
+        </div>
       </div>
     </div>
   );
